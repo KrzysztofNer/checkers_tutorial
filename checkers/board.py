@@ -19,11 +19,23 @@ class Board:
     # """Draws a rectangle on the given surface. Parameter: (surface, color, rect) rect(Rect) -- rectangle(prostokat) to
     # draw, position and dimensions; (left(X increases to the right), top(Y increases to the down), width, height) """
 
+    def evaluate(self):
+        return self.red_left - self.green_left + self.red_kings * 0.5 - self.green_kings * 0.5
+
+    def get_all_pieces(self, color):
+        pieces = []
+        for row in self.board:
+            for piece in row:
+                if piece != 0 and piece.color == color:
+                    pieces.append(piece)
+
+        return pieces
+
     def move(self, piece, row, col):
         self.board[piece.row][piece.col], self.board[row][col] = self.board[row][col], self.board[piece.row][piece.col]
         piece.move(row, col)
 
-        if row == ROWS-1 or row == 0:
+        if row == ROWS - 1 or row == 0:
             piece.make_king()
             if piece.color == RED:
                 self.red_kings += 1
@@ -54,7 +66,6 @@ class Board:
                 piece = self.board[row][col]  # [ [],[] ]    outside list = row, inside list = col
                 if piece != 0:
                     piece.draw(win)
-
 
     def remove(self, pieces):
         for piece in pieces:
@@ -89,7 +100,7 @@ class Board:
 
         return moves
 
-    def _traverse_left(self, start, stop, step, color, left, skipped=[]):  # left diagonal
+    def _traverse_left(self, start, stop, step, color, left, skipped=[]):  # left diagonal      skipped = zbijany pionek
         # if skipped is None:
         #     skipped = []
         moves = {}
@@ -147,7 +158,7 @@ class Board:
                     else:
                         row = min(r + 3, ROWS)
 
-                    moves.update(self._traverse_left(r + step, row, step, color, right - 1,skipped=last))
+                    moves.update(self._traverse_left(r + step, row, step, color, right - 1, skipped=last))
                     moves.update(self._traverse_right(r + step, row, step, color, right + 1, skipped=last))
                 break
 

@@ -5,7 +5,7 @@ from .board import Board
 
 class Game:
     def __init__(self, win):
-        self._init()
+        self._initialization()
         self.win = win
 
     def update(self):
@@ -13,7 +13,7 @@ class Game:
         self.draw_valid_moves(self.valid_moves)
         pygame.display.update()
 
-    def _init(self):
+    def _initialization(self):
         self.selected_piece = None
         self.board = Board()
         self.turn = GREEN
@@ -23,7 +23,7 @@ class Game:
         return self.board.winner()
 
     def reset(self):
-        self._init()
+        self._initialization()
 
     def select(self, row, col) -> bool:
         if self.selected_piece:
@@ -57,7 +57,8 @@ class Game:
     def draw_valid_moves(self, moves):
         for move in moves:
             row, col = move
-            pygame.draw.circle(self.win, BLUE, (SQUARE_SIZE*col + SQUARE_SIZE//2, SQUARE_SIZE*row + SQUARE_SIZE//2), 15)
+            pygame.draw.circle(self.win, BLUE,
+                               (SQUARE_SIZE * col + SQUARE_SIZE // 2, SQUARE_SIZE * row + SQUARE_SIZE // 2), 15)
 
     def change_turn(self):
         self.valid_moves = {}
@@ -65,3 +66,10 @@ class Game:
             self.turn = RED
         else:
             self.turn = GREEN
+
+    def get_board(self):
+        return self.board
+
+    def ai_move(self, board):
+        self.board = board
+        self.change_turn()
